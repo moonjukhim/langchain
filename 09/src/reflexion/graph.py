@@ -5,8 +5,16 @@ load_dotenv()
 
 from langchain_core.messages import BaseMessage, ToolMessage
 from langgraph.graph import END, MessageGraph
-from chains import first_responder, revisor
-from tool_executor import tool_node
+from src.reflexion.chains import first_responder, revisor
+from src.reflexion.tool_executor import tool_node
+# from chains import first_responder, revisor
+# from tool_executor import tool_node
+from typing import TypedDict, List, Annotated
+from langchain_core.messages import BaseMessage
+from langgraph.graph.message import add_messages  # ✅ 병합 함수
+
+class AgentState(TypedDict):
+    messages: Annotated[List[BaseMessage], add_messages]
 
 MAX_ITERATIONS = 2
 builder = MessageGraph()
@@ -23,6 +31,9 @@ def event_loop(state: List[BaseMessage]) -> str:
     if num_iterations > MAX_ITERATIONS:
         return END
     return "execute_tools"
+#def event_loop(state: AgentState) -> str:
+#    count = sum(msg.type == "tool" for msg in state["messages"])
+#    return END if count > MAX_ITERATIONS else "execute_tools"
 
 
 builder.add_conditional_edges("revise", event_loop)
