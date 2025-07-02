@@ -1,4 +1,4 @@
-# langchain
+# LangChain 과 LangGraph 를 활용한 Agentic AI App 개발
 
 1. 환경설정
 
